@@ -20,6 +20,7 @@ services:
       - energy-net
 
   flight-server:
+    image: lab14_energy-collector:latest
     build:
       context: .
       dockerfile: Dockerfile.collector
@@ -35,6 +36,7 @@ services:
     restart: unless-stopped
 
   python-client:
+    image: lab14_energy-python-client:latest
     build:
       context: ./python
       dockerfile: ../Dockerfile.python
@@ -49,9 +51,7 @@ services:
     restart: unless-stopped
 
   collector1:
-    build:
-      context: .
-      dockerfile: Dockerfile.collector
+    image: lab14_energy-collector:latest
     container_name: collector1
     depends_on:
       - etcd
@@ -70,9 +70,7 @@ services:
     restart: unless-stopped
 
   collector2:
-    build:
-      context: .
-      dockerfile: Dockerfile.collector
+    image: lab14_energy-collector:latest
     container_name: collector2
     depends_on:
       - etcd
@@ -91,9 +89,7 @@ services:
     restart: unless-stopped
 
   collector3:
-    build:
-      context: .
-      dockerfile: Dockerfile.collector
+    image: lab14_energy-collector:latest
     container_name: collector3
     depends_on:
       - etcd
@@ -112,9 +108,7 @@ services:
     restart: unless-stopped
 
   collector4:
-    build:
-      context: .
-      dockerfile: Dockerfile.collector
+    image: lab14_energy-collector:latest
     container_name: collector4
     depends_on:
       - etcd
@@ -133,6 +127,7 @@ services:
     restart: unless-stopped
 
   analyzer:
+    image: lab14_energy-analyzer:latest
     build:
       context: .
       dockerfile: Dockerfile.analyzer
