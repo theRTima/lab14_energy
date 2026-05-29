@@ -19,4 +19,5 @@ WORKDIR /root/
 
 COPY --from=builder /app/collector .
 
-CMD ["./collector", "-id", "${COLLECTOR_ID}", "-etcd", "${ETCD_ENDPOINTS}", "-meters", "${TOTAL_METERS}", "-shards", "${NUM_SHARDS}", "-interval", "${INTERVAL}"]
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["./collector -id $COLLECTOR_ID -etcd $ETCD_ENDPOINTS -meters $TOTAL_METERS -shards $NUM_SHARDS -interval $INTERVAL"]
