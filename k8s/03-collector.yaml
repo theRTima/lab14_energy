@@ -57,6 +57,16 @@ spec:
             configMapKeyRef:
               name: energy-config
               key: FLIGHT_ADDR
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: KAFKA_BROKERS
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: KAFKA_TOPIC
         resources:
           requests:
             memory: "256Mi"

@@ -45,3 +45,6 @@ bin/
 
 # Benchmark reports
 bench_report/
+
+# Docker compose
+docker-compose.yml.bak

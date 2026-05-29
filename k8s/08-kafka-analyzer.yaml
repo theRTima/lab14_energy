@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-analyzer
+  namespace: energy-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-analyzer
+  template:
+    metadata:
+      labels:
+        app: kafka-analyzer
+    spec:
+      containers:
+      - name: kafka-analyzer
+        image: lab14_energy-kafka-analyzer:latest
+        imagePullPolicy: Never
+        env:
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: KAFKA_BROKERS
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: KAFKA_TOPIC
+        - name: REPORT_INTERVAL
+          value: "30"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

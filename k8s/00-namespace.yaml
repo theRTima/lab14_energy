@@ -16,3 +16,5 @@ data:
   WINDOW_COUNT: "0"
   ETCD_ENDPOINTS: "etcd:2379"
   FLIGHT_ADDR: "flight-server:8815"
+  KAFKA_BROKERS: "kafka:9092"
+  KAFKA_TOPIC: "energy-aggregated"
