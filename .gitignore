@@ -25,3 +25,7 @@ vendor/
 
 # Go workspace file
 go.work
+
+# Rust
+rust/target/
+rust/Cargo.lock
