@@ -102,7 +102,7 @@ func (fs *FlightServer) DoGet(tkt *flight.Ticket, stream flight.FlightService_Do
 	rec := builder.NewRecord()
 	defer rec.Release()
 
-	writer := flight.NewRecordWriter(stream, flight.IpcWriterOptions{})
+	writer := flight.NewRecordWriter(stream)
 	defer writer.Close()
 
 	if err := writer.Write(rec); err != nil {

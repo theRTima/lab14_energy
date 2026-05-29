@@ -73,17 +73,12 @@ func (fcs *FlightClientSender) SendAggregatedData(ctx context.Context, data aggr
 	rec := builder.NewRecord()
 	defer rec.Release()
 
-	descriptor := &flight.FlightDescriptor{
-		Type: flight.FlightDescriptor_CMD,
-		Cmd:  []byte("put_data"),
-	}
-
 	stream, err := fcs.client.DoPut(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to create DoPut stream: %w", err)
 	}
 
-	writer := flight.NewRecordWriter(stream, flight.WithSchema(schema))
+	writer := flight.NewRecordWriter(stream)
 	writer.Write(rec)
 	writer.Close()
 
