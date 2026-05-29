@@ -19,6 +19,17 @@ services:
     networks:
       - energy-net
 
+  python-service:
+    build:
+      context: ./python
+      dockerfile: ../Dockerfile.python
+    container_name: python-service
+    ports:
+      - "5000:5000"
+    networks:
+      - energy-net
+    restart: unless-stopped
+
   collector1:
     build:
       context: .
@@ -26,12 +37,16 @@ services:
     container_name: collector1
     depends_on:
       - etcd
+      - python-service
     environment:
       - COLLECTOR_ID=collector-1
       - ETCD_ENDPOINTS=etcd:2379
       - TOTAL_METERS=1000
       - NUM_SHARDS=4
       - INTERVAL=5s
+      - WINDOW_TIME=30s
+      - WINDOW_COUNT=0
+      - PYTHON_ENDPOINT=http://python-service:5000
     networks:
       - energy-net
     restart: unless-stopped
@@ -43,12 +58,16 @@ services:
     container_name: collector2
     depends_on:
       - etcd
+      - python-service
     environment:
       - COLLECTOR_ID=collector-2
       - ETCD_ENDPOINTS=etcd:2379
       - TOTAL_METERS=1000
       - NUM_SHARDS=4
       - INTERVAL=5s
+      - WINDOW_TIME=30s
+      - WINDOW_COUNT=0
+      - PYTHON_ENDPOINT=http://python-service:5000
     networks:
       - energy-net
     restart: unless-stopped
@@ -60,12 +79,16 @@ services:
     container_name: collector3
     depends_on:
       - etcd
+      - python-service
     environment:
       - COLLECTOR_ID=collector-3
       - ETCD_ENDPOINTS=etcd:2379
       - TOTAL_METERS=1000
       - NUM_SHARDS=4
       - INTERVAL=5s
+      - WINDOW_TIME=30s
+      - WINDOW_COUNT=0
+      - PYTHON_ENDPOINT=http://python-service:5000
     networks:
       - energy-net
     restart: unless-stopped
@@ -77,12 +100,16 @@ services:
     container_name: collector4
     depends_on:
       - etcd
+      - python-service
     environment:
       - COLLECTOR_ID=collector-4
       - ETCD_ENDPOINTS=etcd:2379
       - TOTAL_METERS=1000
       - NUM_SHARDS=4
       - INTERVAL=5s
+      - WINDOW_TIME=30s
+      - WINDOW_COUNT=0
+      - PYTHON_ENDPOINT=http://python-service:5000
     networks:
       - energy-net
     restart: unless-stopped

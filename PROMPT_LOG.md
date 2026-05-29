@@ -11,7 +11,7 @@
 ## Задание Повышенной сложности 2:
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
-**Промпт:** ""
+**Промпт:** "Now add a tumbling window to the collector. For example: every N time interval or every M records (Power Analysis), aggregate the data on the Go side and send aggregated data (sums, averages, etc.) to Python, rather than the original records, to reduce the volume of transferred data."
 **Результат:**
 ### Итого
 - Количество промптов: 1

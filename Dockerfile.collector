@@ -20,4 +20,4 @@ WORKDIR /root/
 COPY --from=builder /app/collector .
 
 ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["./collector -id $COLLECTOR_ID -etcd $ETCD_ENDPOINTS -meters $TOTAL_METERS -shards $NUM_SHARDS -interval $INTERVAL"]
+CMD ["./collector -id $COLLECTOR_ID -etcd $ETCD_ENDPOINTS -meters $TOTAL_METERS -shards $NUM_SHARDS -interval $INTERVAL -window-time $WINDOW_TIME -window-count $WINDOW_COUNT -python $PYTHON_ENDPOINT"]
