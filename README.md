@@ -1,6 +1,6 @@
 # Energy Consumption Analysis System
 
-Рощин Тимур Максимович, Лабораторная Номер 14, вариант 19, задания повышенной сложности
+Рощин Тимур Максимович 220032-11, Лабораторная Номер 14, вариант 19, задания повышенной сложности
 
 A distributed energy consumption monitoring system with parallel Go collectors, Kafka streaming, real-time Python analytics, and a live Streamlit dashboard.
 
