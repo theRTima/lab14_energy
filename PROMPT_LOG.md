@@ -12,9 +12,9 @@
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
 **Промпт:** "Now add a tumbling window to the collector. For example: every N time interval or every M records (Power Analysis), aggregate the data on the Go side and send aggregated data (sums, averages, etc.) to Python, rather than the original records, to reduce the volume of transferred data."
-**Результат:**
+**Результат:** Обновления docker файла, запуск локального сервера с просмотром статистики по адресу http://localhost:5001/stats .
 ### Итого
 - Количество промптов: 1
-- Что пришлось исправлять вручную:
-- Время: ~  минут
+- Что пришлось исправлять вручную: порт сервера
+- Время: ~  10 минут
 ---
