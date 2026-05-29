@@ -1,8 +1,8 @@
 module github.com/theRTima/lab14_energy
 
-go 1.23
+go 1.25.0
 
-require go.etcd.io/etcd/client/v3 v3.6.11
+require go.etcd.io/etcd/client/v3 v3.5.16
 
 require (
 	github.com/coreos/go-semver v0.3.1 // indirect
