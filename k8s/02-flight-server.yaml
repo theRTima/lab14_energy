@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flight-server
+  namespace: energy-monitoring
+spec:
+  ports:
+  - port: 8815
+    targetPort: 8815
+    name: grpc
+  selector:
+    app: flight-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flight-server
+  namespace: energy-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flight-server
+  template:
+    metadata:
+      labels:
+        app: flight-server
+    spec:
+      containers:
+      - name: flight-server
+        image: lab14_energy-collector:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8815
+          name: grpc
+        env:
+        - name: FLIGHT_SERVER
+          value: "true"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-client
+  namespace: energy-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-client
+  template:
+    metadata:
+      labels:
+        app: python-client
+    spec:
+      containers:
+      - name: python-client
+        image: lab14_energy-python-client:latest
+        imagePullPolicy: Never
+        env:
+        - name: FLIGHT_HOST
+          value: "flight-server"
+        - name: FLIGHT_PORT
+          value: "8815"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analyzer
+  namespace: energy-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analyzer
+  template:
+    metadata:
+      labels:
+        app: analyzer
+    spec:
+      containers:
+      - name: analyzer
+        image: lab14_energy-analyzer:latest
+        imagePullPolicy: Never
+        env:
+        - name: ETCD_ENDPOINTS
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: ETCD_ENDPOINTS
+        - name: INTERVAL
+          value: "30s"
+        - name: WINDOW
+          value: "5m"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

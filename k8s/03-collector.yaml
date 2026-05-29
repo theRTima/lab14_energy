@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector
+  namespace: energy-monitoring
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      labels:
+        app: collector
+    spec:
+      containers:
+      - name: collector
+        image: lab14_energy-collector:latest
+        imagePullPolicy: Never
+        env:
+        - name: COLLECTOR_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: ETCD_ENDPOINTS
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: ETCD_ENDPOINTS
+        - name: TOTAL_METERS
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: TOTAL_METERS
+        - name: NUM_SHARDS
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: NUM_SHARDS
+        - name: INTERVAL
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: INTERVAL
+        - name: WINDOW_TIME
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: WINDOW_TIME
+        - name: WINDOW_COUNT
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: WINDOW_COUNT
+        - name: FLIGHT_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: FLIGHT_ADDR
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"

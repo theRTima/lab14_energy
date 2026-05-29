@@ -32,7 +32,7 @@
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
 **Промпт:** "Now write a Rust library for data validation. Integrate it into a go-collector with cgo."
-**Результат:** rust валидатор, обновленный build.sh и docker файлы.
+**Результат:** rust валидатор, обновленный build.sh и docker файлы. Отображения valid и invalid readings.
 ### Итого
 - Количество промптов: 1
 - Что пришлось исправлять вручную: python путь в dockerfile
@@ -41,10 +41,10 @@
 ## Задание Повышенной сложности 5: Развёртывание в Kubernetes с автоскалированием
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
-**Промпт:** ""
-**Результат:** 
+**Промпт:** "We already packed go-collector into docker image. Now we need to deploy the conveyor into minikube/k3s. Also setup HPA for collector based on queue length or CPU Load."
+**Результат:** deploy-k8s.sh скрипт для деплоя, билда img и включения сервера метрик.
 ### Итого
 - Количество промптов: 1
-- Что пришлось исправлять вручную: 
-- Время: ~ 20 минут
+- Что пришлось исправлять вручную: устанавливал minikube, kubectl
+- Время: ~ 30 минут
 ---

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: energy-monitoring
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: energy-config
+  namespace: energy-monitoring
+data:
+  TOTAL_METERS: "1000"
+  NUM_SHARDS: "4"
+  INTERVAL: "5s"
+  WINDOW_TIME: "30s"
+  WINDOW_COUNT: "0"
+  ETCD_ENDPOINTS: "etcd:2379"
+  FLIGHT_ADDR: "flight-server:8815"
