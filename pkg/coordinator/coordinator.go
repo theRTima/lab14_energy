@@ -14,6 +14,7 @@ type ShardAssignment struct {
 	ShardID int
 	Start   int
 	End     int
+	mutex   *concurrency.Mutex
 }
 
 type Coordinator struct {
@@ -73,10 +74,18 @@ func (c *Coordinator) AcquireShard(ctx context.Context, totalMeters, numShards i
 			ShardID: shardID,
 			Start:   start,
 			End:     end,
+			mutex:   mutex,
 		}, nil
 	}
 
 	return nil, fmt.Errorf("no available shards")
+}
+
+func (sa *ShardAssignment) Release(ctx context.Context) error {
+	if sa.mutex != nil {
+		return sa.mutex.Unlock(ctx)
+	}
+	return nil
 }
 
 func (c *Coordinator) RegisterCollector(ctx context.Context, collectorID string, shardID int) error {
