@@ -21,8 +21,8 @@
 ## Задание Повышенной сложности 3:Передача данных через Apache Arrow
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
-**Промпт:** ""
-**Результат:** 
+**Промпт:** "Change file transfer from json file to Apache Arrow with FlightRPC. Make a go server which gives data in arrow format and python client which accepts it."
+**Результат:** Отправка данных на Fligth сервер с DoPut и доставка данных python клиентм с помощью DoGet. Запуск сервера на порту 8815
 ### Итого
 - Количество промптов: 1
 - Что пришлось исправлять вручную: 

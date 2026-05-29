@@ -9,4 +9,4 @@ COPY aggregation_service.py .
 
 EXPOSE 5000
 
-CMD ["python", "aggregation_service.py"]
+CMD ["python", "flight_client.py"]

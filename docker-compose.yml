@@ -19,13 +19,31 @@ services:
     networks:
       - energy-net
 
-  python-service:
+  flight-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.collector
+    container_name: flight-server
+    depends_on:
+      - etcd
+    environment:
+      - FLIGHT_SERVER=true
+    ports:
+      - "8815:8815"
+    networks:
+      - energy-net
+    restart: unless-stopped
+
+  python-client:
     build:
       context: ./python
       dockerfile: ../Dockerfile.python
-    container_name: python-service
-    ports:
-      - "5001:5000"
+    container_name: python-client
+    depends_on:
+      - flight-server
+    environment:
+      - FLIGHT_HOST=flight-server
+      - FLIGHT_PORT=8815
     networks:
       - energy-net
     restart: unless-stopped
@@ -37,7 +55,7 @@ services:
     container_name: collector1
     depends_on:
       - etcd
-      - python-service
+      - flight-server
     environment:
       - COLLECTOR_ID=collector-1
       - ETCD_ENDPOINTS=etcd:2379
@@ -46,7 +64,7 @@ services:
       - INTERVAL=5s
       - WINDOW_TIME=30s
       - WINDOW_COUNT=0
-      - PYTHON_ENDPOINT=http://python-service:5000
+      - FLIGHT_ADDR=flight-server:8815
     networks:
       - energy-net
     restart: unless-stopped
@@ -58,7 +76,7 @@ services:
     container_name: collector2
     depends_on:
       - etcd
-      - python-service
+      - flight-server
     environment:
       - COLLECTOR_ID=collector-2
       - ETCD_ENDPOINTS=etcd:2379
@@ -67,7 +85,7 @@ services:
       - INTERVAL=5s
       - WINDOW_TIME=30s
       - WINDOW_COUNT=0
-      - PYTHON_ENDPOINT=http://python-service:5000
+      - FLIGHT_ADDR=flight-server:8815
     networks:
       - energy-net
     restart: unless-stopped
@@ -79,7 +97,7 @@ services:
     container_name: collector3
     depends_on:
       - etcd
-      - python-service
+      - flight-server
     environment:
       - COLLECTOR_ID=collector-3
       - ETCD_ENDPOINTS=etcd:2379
@@ -88,7 +106,7 @@ services:
       - INTERVAL=5s
       - WINDOW_TIME=30s
       - WINDOW_COUNT=0
-      - PYTHON_ENDPOINT=http://python-service:5000
+      - FLIGHT_ADDR=flight-server:8815
     networks:
       - energy-net
     restart: unless-stopped
@@ -100,7 +118,7 @@ services:
     container_name: collector4
     depends_on:
       - etcd
-      - python-service
+      - flight-server
     environment:
       - COLLECTOR_ID=collector-4
       - ETCD_ENDPOINTS=etcd:2379
@@ -109,7 +127,7 @@ services:
       - INTERVAL=5s
       - WINDOW_TIME=30s
       - WINDOW_COUNT=0
-      - PYTHON_ENDPOINT=http://python-service:5000
+      - FLIGHT_ADDR=flight-server:8815
     networks:
       - energy-net
     restart: unless-stopped
