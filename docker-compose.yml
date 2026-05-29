@@ -169,8 +169,8 @@ services:
   kafka-analyzer:
     image: lab14_energy-kafka-analyzer:latest
     build:
-      context: ./python
-      dockerfile: ../Dockerfile.kafka-analyzer
+      context: .
+      dockerfile: Dockerfile.kafka-analyzer
     container_name: kafka-analyzer
     depends_on:
       - kafka
@@ -194,6 +194,24 @@ services:
       - ETCD_ENDPOINTS=etcd:2379
       - INTERVAL=30s
       - WINDOW=5m
+    networks:
+      - energy-net
+    restart: unless-stopped
+
+  dashboard:
+    image: lab14_energy-dashboard:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: dashboard
+    depends_on:
+      - kafka
+    ports:
+      - "8501:8501"
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC=energy-aggregated
+      - DASHBOARD_MAX_POINTS=500
     networks:
       - energy-net
     restart: unless-stopped

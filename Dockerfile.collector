@@ -1,4 +1,4 @@
-FROM rust:1.75-alpine AS rust-builder
+FROM rust:1.85-alpine AS rust-builder
 
 WORKDIR /app
 
@@ -35,5 +35,5 @@ WORKDIR /root/
 COPY --from=builder /app/collector .
 
 ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["if [ \"$FLIGHT_SERVER\" = \"true\" ]; then ./collector -flight-server; else ./collector -id $COLLECTOR_ID -etcd $ETCD_ENDPOINTS -meters $TOTAL_METERS -shards $NUM_SHARDS -interval $INTERVAL -window-time $WINDOW_TIME -window-count $WINDOW_COUNT -flight $FLIGHT_ADDR; fi"]
+CMD ["if [ \"$FLIGHT_SERVER\" = \"true\" ]; then ./collector -flight-server; else ./collector -id $COLLECTOR_ID -etcd $ETCD_ENDPOINTS -meters $TOTAL_METERS -shards $NUM_SHARDS -interval $INTERVAL -window-time $WINDOW_TIME -window-count $WINDOW_COUNT -flight $FLIGHT_ADDR -kafka-brokers \"$KAFKA_BROKERS\" -kafka-topic \"$KAFKA_TOPIC\"; fi"]
 

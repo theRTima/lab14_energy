@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  namespace: energy-monitoring
+spec:
+  type: NodePort
+  ports:
+  - port: 8501
+    targetPort: 8501
+    nodePort: 30851
+  selector:
+    app: dashboard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: energy-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: lab14_energy-dashboard:latest
+        imagePullPolicy: Never
+        env:
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: KAFKA_BROKERS
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: energy-config
+              key: KAFKA_TOPIC
+        - name: DASHBOARD_MAX_POINTS
+          value: "500"
+        ports:
+        - containerPort: 8501
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"

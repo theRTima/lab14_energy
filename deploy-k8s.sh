@@ -36,6 +36,7 @@ else
     docker save lab14_energy-analyzer:latest | sudo k3s ctr images import -
     docker save lab14_energy-python-client:latest | sudo k3s ctr images import -
     docker save lab14_energy-kafka-analyzer:latest | sudo k3s ctr images import -
+    docker save lab14_energy-dashboard:latest | sudo k3s ctr images import -
 
     echo ""
     echo "Step 3: Checking metrics-server..."
@@ -57,6 +58,7 @@ kubectl wait --for=condition=ready pod -l app=flight-server -n energy-monitoring
 kubectl wait --for=condition=ready pod -l app=collector -n energy-monitoring --timeout=120s
 kubectl wait --for=condition=ready pod -l app=kafka -n energy-monitoring --timeout=120s
 kubectl wait --for=condition=ready pod -l app=kafka-analyzer -n energy-monitoring --timeout=120s
+kubectl wait --for=condition=ready pod -l app=dashboard -n energy-monitoring --timeout=120s
 
 echo ""
 echo "=== Deployment Complete ==="
@@ -67,6 +69,11 @@ echo "  kubectl get hpa -n energy-monitoring"
 echo "  kubectl logs -f -l app=collector -n energy-monitoring"
 echo "  kubectl logs -f -l app=python-client -n energy-monitoring"
 echo "  kubectl logs -f -l app=kafka-analyzer -n energy-monitoring"
+echo "  kubectl logs -f -l app=dashboard -n energy-monitoring"
+echo ""
+echo "Dashboard URL:"
+echo "  Minikube: minikube service dashboard -n energy-monitoring"
+echo "  k3s: kubectl port-forward service/dashboard -n energy-monitoring 8501:8501"
 echo ""
 echo "To watch HPA scaling:"
 echo "  watch kubectl get hpa -n energy-monitoring"

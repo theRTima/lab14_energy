@@ -71,10 +71,10 @@
 ## Задание Повышенной сложности 8: Веб-дашборд с обновлением в реальном времени
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
-**Промпт:** ""
-**Результат:** 
+**Промпт:** "Now finilize by adding a WebDashboard built on StreamLit. It whould show current aggregated stats and graphs, updated in realtime with new data from collector "
+**Результат:** Рабочий дашборд на streamLit. Работает на 
 ### Итого
 - Количество промптов: 1
 - Что пришлось исправлять вручную: ничего
-- Время: ~  минут
+- Время: ~ 40 минут
 ---

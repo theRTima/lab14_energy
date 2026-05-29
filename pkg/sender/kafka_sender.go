@@ -7,26 +7,32 @@ import (
 	"log"
 	"time"
 
-	"github.com/segmentio/kafka-go"
+	"github.com/IBM/sarama"
 	"github.com/theRTima/lab14_energy/pkg/aggregator"
 )
 
 type KafkaSender struct {
-	writer *kafka.Writer
-	topic  string
+	producer sarama.SyncProducer
+	topic    string
 }
 
 func NewKafkaSender(brokers []string, topic string) (*KafkaSender, error) {
-	writer := &kafka.Writer{
-		Addr:         kafka.TCP(brokers...),
-		Topic:        topic,
-		Balancer:     &kafka.Hash{},
-		BatchTimeout: 100 * time.Millisecond,
-		RequiredAcks: kafka.RequireOne,
-		Async:        false,
+	log.Printf("Kafka sender initializing brokers=%v topic=%s", brokers, topic)
+	config := sarama.NewConfig()
+	config.Producer.Return.Successes = true
+	config.Producer.RequiredAcks = sarama.WaitForLocal
+	config.Producer.Timeout = 5 * time.Second
+	config.Net.DialTimeout = 5 * time.Second
+	config.Net.ReadTimeout = 5 * time.Second
+	config.Net.WriteTimeout = 5 * time.Second
+	config.Version = sarama.V0_10_2_0
+
+	producer, err := sarama.NewSyncProducer(brokers, config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create kafka producer: %w", err)
 	}
 
-	return &KafkaSender{writer: writer, topic: topic}, nil
+	return &KafkaSender{producer: producer, topic: topic}, nil
 }
 
 func (ks *KafkaSender) SendAggregatedData(ctx context.Context, data aggregator.AggregatedData) error {
@@ -62,25 +68,27 @@ func (ks *KafkaSender) SendAggregatedData(ctx context.Context, data aggregator.A
 
 	value, err := json.Marshal(payload)
 	if err != nil {
-		return fmt.Errorf("failed to marshal aggregated data: %w", err)
+		return fmt.Errorf("failed to marshal: %w", err)
 	}
 
-	msg := kafka.Message{
-		Key:   []byte(data.CollectorID),
-		Value: value,
+	msg := &sarama.ProducerMessage{
+		Topic: ks.topic,
+		Key:   sarama.StringEncoder(data.CollectorID),
+		Value: sarama.ByteEncoder(value),
 	}
 
-	if err := ks.writer.WriteMessages(ctx, msg); err != nil {
-		return fmt.Errorf("failed to write to Kafka: %w", err)
+	partition, offset, err := ks.producer.SendMessage(msg)
+	if err != nil {
+		return fmt.Errorf("failed to send message to Kafka: %w", err)
 	}
 
-	log.Printf("Sent aggregated data to Kafka topic %s: %d readings from %d meters",
-		ks.topic, data.TotalCount, len(data.Metrics))
+	log.Printf("Sent aggregated data to Kafka topic %s (partition=%d offset=%d): %d readings from %d meters",
+		ks.topic, partition, offset, data.TotalCount, len(data.Metrics))
 	return nil
 }
 
 func (ks *KafkaSender) Close() error {
-	return ks.writer.Close()
+	return ks.producer.Close()
 }
 
 type aggregatedMetric struct {
