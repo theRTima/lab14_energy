@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.9
+    container_name: etcd
+    environment:
+      - ETCD_NAME=etcd0
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_INITIAL_CLUSTER=etcd0=http://etcd:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    networks:
+      - energy-net
+
+  collector1:
+    build:
+      context: .
+      dockerfile: Dockerfile.collector
+    container_name: collector1
+    depends_on:
+      - etcd
+    environment:
+      - COLLECTOR_ID=collector-1
+      - ETCD_ENDPOINTS=etcd:2379
+      - TOTAL_METERS=1000
+      - NUM_SHARDS=4
+      - INTERVAL=5s
+    networks:
+      - energy-net
+    restart: unless-stopped
+
+  collector2:
+    build:
+      context: .
+      dockerfile: Dockerfile.collector
+    container_name: collector2
+    depends_on:
+      - etcd
+    environment:
+      - COLLECTOR_ID=collector-2
+      - ETCD_ENDPOINTS=etcd:2379
+      - TOTAL_METERS=1000
+      - NUM_SHARDS=4
+      - INTERVAL=5s
+    networks:
+      - energy-net
+    restart: unless-stopped
+
+  collector3:
+    build:
+      context: .
+      dockerfile: Dockerfile.collector
+    container_name: collector3
+    depends_on:
+      - etcd
+    environment:
+      - COLLECTOR_ID=collector-3
+      - ETCD_ENDPOINTS=etcd:2379
+      - TOTAL_METERS=1000
+      - NUM_SHARDS=4
+      - INTERVAL=5s
+    networks:
+      - energy-net
+    restart: unless-stopped
+
+  collector4:
+    build:
+      context: .
+      dockerfile: Dockerfile.collector
+    container_name: collector4
+    depends_on:
+      - etcd
+    environment:
+      - COLLECTOR_ID=collector-4
+      - ETCD_ENDPOINTS=etcd:2379
+      - TOTAL_METERS=1000
+      - NUM_SHARDS=4
+      - INTERVAL=5s
+    networks:
+      - energy-net
+    restart: unless-stopped
+
+  analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile.analyzer
+    container_name: analyzer
+    depends_on:
+      - etcd
+    environment:
+      - ETCD_ENDPOINTS=etcd:2379
+      - INTERVAL=30s
+      - WINDOW=5m
+    networks:
+      - energy-net
+    restart: unless-stopped
+
+networks:
+  energy-net:
+    driver: bridge
