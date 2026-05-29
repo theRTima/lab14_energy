@@ -8,7 +8,7 @@
 - Что пришлось исправлять вручную: конфликты версий и зависимостей go
 - Время: ~ 20 минут
 ---
-## Задание Повышенной сложности 2:
+## Задание Повышенной сложности 2: Оконная агрегация в Go перед отправкой в Python
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
 **Промпт:** "Now add a tumbling window to the collector. For example: every N time interval or every M records (Power Analysis), aggregate the data on the Go side and send aggregated data (sums, averages, etc.) to Python, rather than the original records, to reduce the volume of transferred data."
@@ -17,4 +17,14 @@
 - Количество промптов: 1
 - Что пришлось исправлять вручную: порт сервера
 - Время: ~  10 минут
+---
+## Задание Повышенной сложности 3:Передача данных через Apache Arrow
+### Промпт 1
+**Инструмент:** Claude Haiku 4.5 в Agent режиме.
+**Промпт:** ""
+**Результат:** 
+### Итого
+- Количество промптов: 1
+- Что пришлось исправлять вручную: 
+- Время: ~  минут
 ---
