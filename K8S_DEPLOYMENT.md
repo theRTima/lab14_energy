@@ -36,16 +36,31 @@ Once minikube or k3s is running:
 ./deploy-k8s.sh
 ```
 
+This deploys all services into the `energy-monitoring` namespace.
+
+### Access the Dashboard
+
+**Option 1 — Port forwarding (recommended):**
+```bash
+kubectl port-forward -n energy-monitoring service/dashboard 8501:8501
+```
+Then open http://localhost:8501.
+
+**Option 2 — NodePort (minikube only):**
+```bash
+minikube service dashboard -n energy-monitoring
+```
+
 ## Monitor the System
+
+View all pods:
+```bash
+kubectl get pods -n energy-monitoring
+```
 
 Watch HPA scaling:
 ```bash
 watch kubectl get hpa -n energy-monitoring
-```
-
-View pods:
-```bash
-kubectl get pods -n energy-monitoring
 ```
 
 View collector logs:
@@ -53,22 +68,22 @@ View collector logs:
 kubectl logs -f -l app=collector -n energy-monitoring
 ```
 
+View kafka-analyzer logs:
+```bash
+kubectl logs -f -l app=kafka-analyzer -n energy-monitoring
+```
+
+View dashboard logs:
+```bash
+kubectl logs -f -l app=dashboard -n energy-monitoring
+```
+
 View Python client logs:
 ```bash
 kubectl logs -f -l app=python-client -n energy-monitoring
 ```
 
-## Test HPA Scaling
-
-Generate load to trigger autoscaling:
-```bash
-# Increase the number of meters to create more CPU load
-kubectl set env deployment/collector TOTAL_METERS=5000 -n energy-monitoring
-```
-
-Watch the HPA scale up collectors automatically when CPU exceeds 70%.
-
-## Cleanup
+## Stop the System
 
 ```bash
 ./cleanup-k8s.sh
@@ -86,11 +101,33 @@ sudo /usr/local/bin/k3s-uninstall.sh
 
 ## Architecture in Kubernetes
 
-- **etcd**: StatefulSet with persistent volume (1 replica)
-- **flight-server**: Deployment (1 replica) - receives Arrow data
-- **collector**: Deployment (2-8 replicas) - auto-scales based on CPU/memory
-- **analyzer**: Deployment (1 replica) - analyzes etcd data
-- **python-client**: Deployment (1 replica) - fetches from Flight server
+- **etcd**: StatefulSet (1 replica) — distributed coordination
+- **zookeeper**: StatefulSet (1 replica) — Kafka coordination
+- **kafka**: StatefulSet (1 replica) — message broker
+- **flight-server**: Deployment (1 replica) — receives Arrow data (legacy)
+- **collector**: Deployment (2–8 replicas) — auto-scales via HPA
+- **analyzer**: Deployment (1 replica) — analyzes etcd data
+- **kafka-analyzer**: Deployment (1 replica) — real-time Kafka consumer
+- **dashboard**: Deployment (1 replica) — Streamlit UI on port 8501 (NodePort 30851)
+- **python-client**: Deployment (1 replica) — fetches from Flight server
+
+## Pipeline (K8s)
+
+```
+Meters → Collectors (Go) → Kafka
+                             ├── kafka-analyzer (Python) → logs
+                             └── dashboard (Streamlit)   → port 8501
+                           → Flight Server (legacy) → Analyzer
+```
+
+## Test HPA Scaling
+
+Generate load to trigger autoscaling:
+```bash
+kubectl set env deployment/collector TOTAL_METERS=5000 -n energy-monitoring
+```
+
+Watch the HPA scale up collectors automatically when CPU exceeds 70%.
 
 ## HPA Behavior
 
