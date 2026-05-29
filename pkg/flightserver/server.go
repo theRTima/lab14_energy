@@ -1,18 +1,15 @@
 package flightserver
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/apache/arrow/go/v17/arrow"
 	"github.com/apache/arrow/go/v17/arrow/array"
 	"github.com/apache/arrow/go/v17/arrow/flight"
 	"github.com/apache/arrow/go/v17/arrow/memory"
 	"github.com/theRTima/lab14_energy/pkg/aggregator"
-	"google.golang.org/grpc"
 )
 
 type FlightServer struct {
@@ -105,7 +102,7 @@ func (fs *FlightServer) DoGet(tkt *flight.Ticket, stream flight.FlightService_Do
 	rec := builder.NewRecord()
 	defer rec.Release()
 
-	writer := flight.NewRecordWriter(stream, flight.WithSchema(schema))
+	writer := flight.NewRecordWriter(stream, flight.IpcWriterOptions{})
 	defer writer.Close()
 
 	if err := writer.Write(rec); err != nil {
@@ -123,7 +120,7 @@ func (fs *FlightServer) ListFlights(criteria *flight.Criteria, stream flight.Fli
 	info := &flight.FlightInfo{
 		Schema: []byte{},
 		FlightDescriptor: &flight.FlightDescriptor{
-			Type: flight.FlightDescriptor_PATH,
+			Type: flight.DescriptorPATH,
 			Path: []string{"aggregated_data"},
 		},
 		Endpoint: []*flight.FlightEndpoint{
@@ -143,8 +140,6 @@ func StartFlightServer(addr string) (*FlightServer, error) {
 
 	server := flight.NewServerWithMiddleware(nil)
 	server.RegisterFlightService(fs)
-
-	grpcServer := grpc.NewServer()
 	server.Init(addr)
 
 	go func() {
