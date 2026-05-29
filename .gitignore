@@ -26,6 +26,22 @@ vendor/
 # Go workspace file
 go.work
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.python-version
+
 # Rust
 rust/target/
 rust/Cargo.lock
+
+# Build output
+bin/
+
+# Benchmark reports
+bench_report/

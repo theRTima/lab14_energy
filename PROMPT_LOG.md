@@ -42,7 +42,7 @@
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
 **Промпт:** "We already packed go-collector into docker image. Now we need to deploy the conveyor into minikube/k3s. Also setup HPA for collector based on queue length or CPU Load."
-**Результат:** deploy-k8s.sh скрипт для деплоя, билда img и включения сервера метрик. Все успешно развертывается.
+**Результат:** deploy-k8s.sh скрипт для деплоя, билда img и включения сервера метрик. Все успешно развертывается. Можно просматривать все с помощью logs и get pods/get hpa
 ### Итого
 - Количество промптов: 1
 - Что пришлось исправлять вручную: устанавливал minikube, kubectl. Запуск minikube - minikube start --cpus=4 --memory=4096, выделял больше места.
@@ -51,8 +51,8 @@
 ## Задание Повышенной сложности 6:
 ### Промпт 1
 **Инструмент:** Claude Haiku 4.5 в Agent режиме.
-**Промпт:** ""
-**Результат:** 
+**Промпт:** "Now create a python data collector with asyncio, compare its perfomance with Go version of collector under the same load. Results must be a report with graphs."
+**Результат:** При запуске bench_compare.py получаем требуемые сравнения и графики.
 ### Итого
 - Количество промптов: 1
 - Что пришлось исправлять вручную: 
