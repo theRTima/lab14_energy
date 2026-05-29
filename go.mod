@@ -1,6 +1,6 @@
 module github.com/theRTima/lab14_energy
 
-go 1.26.3
+go 1.23
 
 require go.etcd.io/etcd/client/v3 v3.6.11
 
